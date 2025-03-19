@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Header from '@/components/Header';
 import BottomNavigation from '@/components/BottomNavigation';
-import { AlertTriangle, Clock, MapPin, Plus, Road } from 'lucide-react';
+import { AlertTriangle, Clock, MapPin, Plus, Car } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -49,7 +49,7 @@ const Alertas = () => {
       case 'accident':
         return <AlertTriangle className="w-6 h-6 text-red-500" />;
       case 'traffic':
-        return <Road className="w-6 h-6 text-orange-500" />;
+        return <Car className="w-6 h-6 text-orange-500" />;
       case 'closure':
         return <MapPin className="w-6 h-6 text-purple-500" />;
       default:
@@ -193,3 +193,4 @@ const Alertas = () => {
 };
 
 export default Alertas;
+
