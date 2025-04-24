@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
@@ -8,13 +7,14 @@ import { AlertTriangle, Clock, Map as MapIcon } from 'lucide-react';
 
 const Index = () => {
   const [showAlert, setShowAlert] = useState(false);
-  
+  const [favoriteLines, setFavoriteLines] = useState<string[]>([]); // novo nome aplicado aqui
+
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden">
       <Header />
       
       <main className="flex-1 relative">
-        <Map />
+        <Map favoriteLines={favoriteLines} /> {/* Passa como prop se necessário */}
         
         {/* Alerta flutuante */}
         <AnimatePresence>
@@ -31,7 +31,9 @@ const Index = () => {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-medium text-gray-800">Acidente na via</h3>
-                  <p className="text-sm text-gray-600 mt-1">Av. Salesiano bloqueada sentido centro. Linhas 999 e 123 desviadas.</p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Av. Salesiano bloqueada sentido centro. Linhas 999 e 123 desviadas.
+                  </p>
                   <div className="flex items-center mt-2 text-xs text-gray-500">
                     <Clock className="w-3 h-3 mr-1" />
                     <span>Há 10 minutos</span>
@@ -41,8 +43,8 @@ const Index = () => {
             </motion.div>
           )}
         </AnimatePresence>
-        
-        {/* Botão para mostrar/esconder alerta (para demonstração) */}
+
+        {/* Botão para mostrar/esconder alerta */}
         <motion.button
           whileTap={{ scale: 0.9 }}
           className="absolute bottom-20 right-4 bg-white rounded-full p-3 shadow-lg"
@@ -51,7 +53,7 @@ const Index = () => {
           <AlertTriangle className="w-5 h-5 text-bus-warning" />
         </motion.button>
       </main>
-      
+
       <BottomNavigation />
     </div>
   );

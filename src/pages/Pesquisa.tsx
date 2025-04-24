@@ -1,10 +1,8 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Header from '@/components/Header';
 import BottomNavigation from '@/components/BottomNavigation';
 import SearchBar from '@/components/SearchBar';
-import BusCard from '@/components/BusCard';
 import { Search, MapPin, Route, AlertTriangle, Bus, Star } from 'lucide-react';
 
 interface SearchResult {
@@ -20,51 +18,53 @@ const Pesquisa = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  
+
   const handleSearch = (query: string, type: 'local' | 'linha') => {
     setSearchQuery(query);
     setSearchType(type);
     setIsSearching(true);
-    
-    // Simular busca com resultados fictícios
+
     setTimeout(() => {
-      if (type === 'local') {
-        setSearchResults([
-          { id: '1', type: 'stop', title: 'Terminal Central', subtitle: '5 linhas disponíveis', isFavorite: true },
-          { id: '2', type: 'stop', title: 'Salesiano - Av', subtitle: '3 linhas disponíveis', isFavorite: false },
-          { id: '3', type: 'stop', title: 'Santa Martha', subtitle: '2 linhas disponíveis', isFavorite: false },
-        ]);
-      } else {
-        setSearchResults([
-          { id: '4', type: 'bus', title: '999 - Salesiano', subtitle: 'Via Centro', isFavorite: true },
-          { id: '5', type: 'bus', title: '123 - Terminal Central', subtitle: 'Via Salesiano', isFavorite: false },
-          { id: '6', type: 'route', title: 'Rota Rápida: Salesiano → Centro', subtitle: '15 minutos', isFavorite: false },
-        ]);
-      }
+      const results: SearchResult[] = type === 'local'
+        ? [
+            { id: '1', type: 'stop', title: 'Terminal Central', subtitle: '5 linhas disponíveis', isFavorite: true },
+            { id: '2', type: 'stop', title: 'Salesiano - Av', subtitle: '3 linhas disponíveis', isFavorite: false },
+            { id: '3', type: 'stop', title: 'Santa Martha', subtitle: '2 linhas disponíveis', isFavorite: false },
+          ]
+        : [
+            { id: '4', type: 'bus', title: '999 - Salesiano', subtitle: 'Via Centro', isFavorite: true },
+            { id: '5', type: 'bus', title: '123 - Terminal Central', subtitle: 'Via Salesiano', isFavorite: false },
+            { id: '6', type: 'route', title: 'Rota Rápida: Salesiano → Centro', subtitle: '15 minutos', isFavorite: false },
+          ];
+      
+      setSearchResults(results);
       setIsSearching(false);
     }, 1000);
   };
-  
+
   const toggleFavorite = (id: string) => {
-    setSearchResults(prevResults => prevResults.map(result => 
-      result.id === id ? { ...result, isFavorite: !result.isFavorite } : result
-    ));
+    setSearchResults(prev =>
+      prev.map(item =>
+        item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
+      )
+    );
   };
-  
-  const getIcon = (type: string) => {
+
+  const getIcon = (type: SearchResult['type']) => {
+    const className = "w-5 h-5 text-white";
     switch (type) {
       case 'bus':
-        return <Bus className="w-5 h-5 text-white" />;
+        return <Bus className={className} />;
       case 'stop':
-        return <MapPin className="w-5 h-5 text-white" />;
+        return <MapPin className={className} />;
       case 'route':
-        return <Route className="w-5 h-5 text-white" />;
+        return <Route className={className} />;
       default:
-        return <Search className="w-5 h-5 text-white" />;
+        return <Search className={className} />;
     }
   };
-  
-  const getBackgroundColor = (type: string) => {
+
+  const getBackgroundColor = (type: SearchResult['type']) => {
     switch (type) {
       case 'bus':
         return 'bg-bus-blue';
@@ -76,17 +76,18 @@ const Pesquisa = () => {
         return 'bg-gray-500';
     }
   };
-  
+
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       <Header />
-      
+
       <main className="flex-1 p-4 pb-20 overflow-y-auto">
         <div className="mb-6">
           <SearchBar onSearch={handleSearch} />
         </div>
-        
-        <div className="rounded-xl bg-bus-gradient-start p-4 mb-6 text-white">
+
+        {/* Seção de destaque */}
+        <div className="rounded-xl bg-bus-gradient-start p-4 mb-6 text-white shadow">
           <div className="flex items-center mb-2">
             <div className="bg-white bg-opacity-20 rounded-full p-2 mr-2">
               <Bus className="w-5 h-5" />
@@ -94,7 +95,7 @@ const Pesquisa = () => {
             <h3 className="text-lg font-medium">Viagem rápida</h3>
           </div>
           <p className="text-sm opacity-90 mb-3">Encontre o caminho mais rápido para seu destino</p>
-          
+
           <div className="flex space-x-3">
             <div className="flex-1">
               <div className="bg-white bg-opacity-20 rounded-lg p-2 text-sm">
@@ -105,7 +106,7 @@ const Pesquisa = () => {
                 <p className="font-medium">Sua localização</p>
               </div>
             </div>
-            
+
             <div className="flex-1">
               <div className="bg-white bg-opacity-20 rounded-lg p-2 text-sm">
                 <div className="flex items-center mb-1">
@@ -117,17 +118,17 @@ const Pesquisa = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Resultados da pesquisa */}
-        {searchQuery && (
+        {searchQuery ? (
           <div className="mt-4">
             <h3 className="text-sm font-medium text-gray-500 mb-2">
-              Resultados para "{searchQuery}"
+              Resultados para <span className="text-gray-700">"{searchQuery}"</span>
             </h3>
-            
+
             {isSearching ? (
               <div className="flex justify-center items-center py-8">
-                <div className="w-8 h-8 border-4 border-bus-blue border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-8 h-8 border-4 border-bus-blue border-t-transparent rounded-full animate-spin" />
               </div>
             ) : (
               <div className="space-y-2">
@@ -148,15 +149,15 @@ const Pesquisa = () => {
                           <p className="text-xs text-gray-500">{result.subtitle}</p>
                         </div>
                       </div>
-                      
+
                       <motion.button
                         whileTap={{ scale: 0.8 }}
                         onClick={() => toggleFavorite(result.id)}
                         className="focus:outline-none"
                       >
-                        <Star 
-                          className={`w-6 h-6 ${result.isFavorite ? "text-bus-favorite" : "text-gray-300"}`} 
-                          fill={result.isFavorite ? "#FFB800" : "none"} 
+                        <Star
+                          className={`w-6 h-6 ${result.isFavorite ? "text-bus-favorite" : "text-gray-300"}`}
+                          fill={result.isFavorite ? "#FFB800" : "none"}
                         />
                       </motion.button>
                     </motion.div>
@@ -171,9 +172,7 @@ const Pesquisa = () => {
               </div>
             )}
           </div>
-        )}
-        
-        {!searchQuery && (
+        ) : (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <Search className="w-16 h-16 text-gray-300 mb-4" />
             <h3 className="text-xl font-medium text-gray-700 mb-2">Busque rotas ou locais</h3>
@@ -183,7 +182,7 @@ const Pesquisa = () => {
           </div>
         )}
       </main>
-      
+
       <BottomNavigation />
     </div>
   );
