@@ -10,6 +10,7 @@ import Pesquisa from "./pages/Pesquisa";
 import Alertas from "./pages/Alertas";
 import Linhas from "./pages/Linhas";
 import NotFound from "./pages/NotFound";
+import MapPage from "./pages/MapPage";
 
 // Adicionar framer-motion
 import { AnimatePresence } from "framer-motion";
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/pesquisa" element={<Pesquisa />} />
             <Route path="/alertas" element={<Alertas />} />
             <Route path="/linhas" element={<Linhas />} />
+            <Route path="/mapa" element={<MapPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AnimatePresence>

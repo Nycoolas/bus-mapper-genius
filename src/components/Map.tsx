@@ -2,23 +2,7 @@ import 'leaflet/dist/leaflet.css';
 import React, { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
-
-type LatLng = { lat: number; lng: number };
-
-type BusStop = {
-  id: string;
-  name: string;
-  location: LatLng;
-  buses: string[];
-  isFavorite?: boolean;
-};
-
-type Incident = {
-  id: string;
-  type: 'accident' | 'traffic';
-  location: LatLng;
-  description: string;
-};
+import { BusStop, Incident } from '@/types/map';
 
 // Ícones personalizados
 const defaultIcon = new L.Icon({
